@@ -2,3 +2,21 @@ baseURL = "http://gofrendiasgard.github.io/"
 languageCode = "en-us"
 title = "GoFrendi's Articles"
 theme = "ananke"
+
+SectionPagesMenu = "main"
+Paginate = 5
+
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+[params]
+  description = "Machine Learning, Math, Software Engineering, Random"
+  facebook = "https://facebook.com/gofrendi"
+  twitter = "https://twitter.com/goFrendiAsgard"
+  instagram = ""
+  youtube = ""
+  github = ""
+  gitlab = ""
+  linkedin = ""
