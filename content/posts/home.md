@@ -1,6 +1,10 @@
 ---
 title: "About This Blog"
 date: 2019-07-31T07:41:41+07:00
+categories:
+    - General
+tags:
+    - General
 ---
 
 Hi, my name is Go Frendi Gunawan. Currently I work as Backend Engineer at kata.ai.
