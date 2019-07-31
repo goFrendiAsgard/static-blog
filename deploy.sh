@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# convert notebook to markdown
+jupyter nbconvert ./content/posts/*.ipynb --to markdown
+
 # If a command fails then the deploy stops
 set -e
 
