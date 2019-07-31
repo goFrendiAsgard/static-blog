@@ -1,11 +1,11 @@
 
 ---
-title: "What is Machine Learning"
+title: "Hello world"
 date: 2019-07-31T07:48:41+07:00
 categories:
-    - Machine Learning
+- Machine Learning
 tags:
-    - Machine Learning
+- Machine Learning
 ---
 
 
