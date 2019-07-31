@@ -1,0 +1,4 @@
+baseURL = "http://gofrendiasgard.github.io/"
+languageCode = "en-us"
+title = "GoFrendi's Articles"
+theme = "ananke"
