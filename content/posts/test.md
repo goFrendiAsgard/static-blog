@@ -9,6 +9,11 @@ tags:
 ---
 
 
+First of all, let's try some latex: $\frac{4}{5}$
+
+Now, I will try to use Python.
+Let's start with simple hello world
+
 
 ```python
 print("hello world")
@@ -16,3 +21,12 @@ print("hello world")
 
     hello world
 
+
+Finally, try some matplotlib thing
+
+
+```python
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+```
