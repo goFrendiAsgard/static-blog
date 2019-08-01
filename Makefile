@@ -1,6 +1,6 @@
 generate:
-	jupyter nbconvert ./content/posts/*.ipynb --to markdown && hugo
+	./ipynb-to-markdown.sh && hugo
 serve:
-	hugo server -D
+	./ipynb-to-markdown.sh && hugo server -D
 deploy:
-	./deploy.sh
+	./ipynb-to-markdown.sh && hugo && ./deploy.sh
