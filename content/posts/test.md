@@ -40,8 +40,3 @@ plt.show()
 
 ![png](test_files/test_4_0.png)
 
-
-
-```python
-
-```
