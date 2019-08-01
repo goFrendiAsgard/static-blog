@@ -1,1 +1,1 @@
-jupyter nbconvert ./content/posts/*.ipynb --to markdown && hugo
+jupyter nbconvert ./content/posts/*.ipynb --to markdown
