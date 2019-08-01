@@ -20,4 +20,4 @@ Paginate = 5
   github = ""
   gitlab = ""
   linkedin = ""
-  featured_image = "/static/assets/gofrendi-fire.jpg"
+  featured_image = "/assets/gofrendi-fire.jpg"
