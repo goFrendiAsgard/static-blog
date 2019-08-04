@@ -180,14 +180,16 @@ plt.show()
 Finally, let's build our neural network.
 
 First of all, we define 3 layers here:
-* __flatten layer with input_shape = 28x28__. This one will transform our 2 dimensional matrix into 1 dimensional matrix (or a vector). The output of this layer will be an array with 784 elements
-* __dense layer containing 128 neuron with relu activation__. This one will create a layer containing 128 neuron. Each of them is connected to the output of our previous layer (an array containing 784 elements). Each neuron activation is depending on `relu` function (https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
-* __dense layer containing 10 neuron with softmax activation__. Finally, since we have 10 classes, it is natural to have 10 neuron in our output layer. Each neuron should show us how probable is an image belong to a particular class. Finally, we will use softmax to return the prediction result (https://en.wikipedia.org/wiki/Softmax_function)
+
+* flatten layer with input_shape = 28x28: This one will transform our 2 dimensional matrix into 1 dimensional matrix (or a vector). The output of this layer will be an array with 784 elements
+* dense layer containing 128 neuron with relu activation: This one will create a layer containing 128 neuron. Each of them is connected to the output of our previous layer (an array containing 784 elements). Each neuron activation is depending on `relu` function (https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
+* dense layer containing 10 neuron with softmax activation: Finally, since we have 10 classes, it is natural to have 10 neuron in our output layer. Each neuron should show us how probable is an image belong to a particular class. Finally, we will use softmax to return the prediction result (https://en.wikipedia.org/wiki/Softmax_function)
 
 After defining the layers, we need to define our optimizer, loss function, and metrics:
-* __optimizer__. How to optimize
-* __loss function__. How to calculate error
-* __metrics__. How to measure the quality of the network
+
+* optimizer: How to optimize
+* loss function: How to calculate error
+* metrics: How to measure the quality of the network
 
 
 ```python
