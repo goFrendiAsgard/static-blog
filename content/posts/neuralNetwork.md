@@ -1,4 +1,11 @@
-
+---
+title: "Neural Network"
+date: 2019-07-31T07:48:41+07:00
+categories:
+- Machine Learning
+tags:
+- Macine Learning
+---
 # Implementation with Tensorflow
 
 TensorFlow is an open-source software library for dataflow programming across a range of tasks. It is a symbolic math library, and is also used for machine learning applications such as neural networks.
@@ -165,7 +172,7 @@ plt.show()
 
 
 
-![png](neuralNetwork_files/neuralNetwork_13_1.png)
+![png](neuralNetwork_files/neuralNetwork_14_1.png)
 
 
 ## Configuring the neural network model
@@ -211,7 +218,14 @@ print('Test accuracy:', test_acc)
     Epoch 2/5
     60000/60000 [==============================] - 5s 90us/sample - loss: 14.5060 - accuracy: 0.1000
     Epoch 3/5
-    48928/60000 [=======================>......] - ETA: 0s - loss: 14.5089 - accuracy: 0.0998
+    60000/60000 [==============================] - 5s 90us/sample - loss: 14.5060 - accuracy: 0.1000
+    Epoch 4/5
+    60000/60000 [==============================] - 5s 91us/sample - loss: 14.5060 - accuracy: 0.1000
+    Epoch 5/5
+    60000/60000 [==============================] - 6s 93us/sample - loss: 14.5060 - accuracy: 0.1000
+    10000/10000 [==============================] - 0s 42us/sample - loss: 14.5063 - accuracy: 0.1000
+    Test accuracy: 0.1
+
 
 ## Prediction
 
@@ -238,5 +252,5 @@ plt.show()
 
 
 
-![png](neuralNetwork_files/neuralNetwork_19_1.png)
+![png](neuralNetwork_files/neuralNetwork_20_1.png)
 
