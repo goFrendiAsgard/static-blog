@@ -6,6 +6,9 @@ theme = "ananke"
 SectionPagesMenu = "main"
 Paginate = 5
 
+pygmentsCodefences = true
+pygmentsStyle = "dracula"
+
 [sitemap]
   changefreq = "monthly"
   priority = 0.5
