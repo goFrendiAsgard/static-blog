@@ -355,7 +355,7 @@ $$weight = f(w1.age + w2.height + w3)$$
 
 This is what a single neuron in neural network do !!!
 
-![]()
+![](https://gofrendiasgard.github.io/images/perceptron.jpg)
 
 
 
