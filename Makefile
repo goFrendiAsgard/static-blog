@@ -5,4 +5,4 @@ serve:
 deploy:
 	./ipynb-to-markdown.sh && hugo && ./deploy.sh
 jupyter:
-	cd content/posts && source /opt/anaconda/bin/activate root && jupyter notebook
+	cd content/notebooks && source /opt/anaconda/bin/activate root && jupyter notebook
