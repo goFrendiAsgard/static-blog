@@ -8,7 +8,7 @@ tags:
 ---
 # The Problem
 
-Artificial neural network is no magic. The main purpose of neural network (and any classical machine learning algorithm) is to find out `magic numbers` in order to find out the best `classifier` or `regressor`.
+Artificial neural network has no magic. The main purpose of neural network (and any classical machine learning algorithm) is to find out `special numbers` in order to find out the best `classifier` or `regressor`.
 
 Suppose we have the following data:
 
@@ -28,9 +28,9 @@ Now our goal is to find out 3 magic numbers, `w1`, `w2`, and `w3`.
 
 # A simple approach (Non-neural-network)
 
-You might be tempted to solve the equation using pure `algebra`. Since we have single data with three variables (aka: the magic numbers), I think we can't solve the equation with pure algebra.
+You might be tempted to solve the equation using pure `algebra`. Since we have single data with three variables (aka: the special numbers), we can't solve the equation with pure algebra.
 
-So, let's solve the using brute-force experiments!!!
+So, let's solve the equation using brute-force experiments!!!
 
 ## Finding the regressor
 
@@ -105,12 +105,16 @@ __Note:__ If your problem can be perfectly solved with pure-algebra/brute-force.
 
 We have just jump into a problem named `overfitting`. Overfitting is a problem where our predictor/regressor is correct for the training data, but incorrect for the testing data.
 
-Another problems with our approach are:
+Technically, the problem with our approach are:
 
+* overfitting
 * we naively believe that w1, w2, and w3 are integer
 * we naively believe that the predictor is a straight linear line. Probably we need some logarithm, power, and other eccentric operations in order to get the correct predictor/classifier
+* we naively believe that we can try all possible solutions
 
-Neural networks can definitely solve our two last problems. Overfitting is still a common problem in machine learning.
+Neural networks can only solve the three last problems.
+
+Overfitting is still a common problem in machine learning. Unfortunately, the only way to deal with overfitting is by provide more `training data`.
 
 # Neural Network approach
 
@@ -129,6 +133,96 @@ This is what a single neuron in neural network do !!!
 ![](http://gofrendiasgard.github.io/images/perceptron.jpg)
 
 
+## Feed Forward
+
+The process of feed forward is as simple as 
+
+$$weight = f(w1.age + w2.height + w3)$$
+
+Or, to make it more general we can write the equation as follow:
+
+$$y = f(\Sigma^{n}_{i=1}w_ix_i)$$
+
+For the sake of simplicity, we can break down the equation as follow:
+
+$$y = f(net)$$
+
+where
+
+$$net = \Sigma^{n}_{i=1}w_ix_i$$1
+
+We will use this later for back-propagation.
+
+The `w`s are random numbers, while `f` can be any function. The most commonly used activation function are enlisted here: https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6
+
+Suppose we have the following data:
+
+```
+x1 x2 target
+0  1  0.3
+1  0  0.7
+```
+
+and the following configuration:
+
+```
+w1 = 0.1
+w2 = 0.2
+w3 = 0.1
+f = sigmoid
+```
+
+Since sigmoid function is described as follow:
+
+$$f(x) = \frac{1}{1+e^x}$$
+
+Then, we can calculate `y` as follow:
+
+$$y = f(net) = \frac{1}{1+e^{net}}$$
+
+where `net` is
+
+$$net = \Sigma^{n}_{i=1}w_ix_i = w_1x_1 + w_2 x_2 + w_3$$
+
+In some literature, you will find `b` (stand for bias) instead of `w3`. Don't worry, you can even think `w3` as `w3.x3` where `x3` is `1`.
+
+Finally, for `x1=0`, `x2=1`, `target=0.3`, `w1 = 0.1`, `w2 = 0.2`, and `w3 = 0.1` we get this:
+
+$$y = f(net)$$
+
+and
+
+$$net=w_1x_1 + w_2x_2 + w_3$$
+
+thus
+
+$$y = \frac{1}{1+e^{(0.1 x 0 + 0.2 x 1 + 0.1)}}$$
+
+Calculating the equation give us:
+
+
+```python
+import math
+y = 1/(1+math.exp(0.1 * 0 + 0.2 * 1 + 0.1))
+y
+```
+
+
+
+
+    0.425557483188341
+
+
+
+Comparing the `target` and `y`, we can find that the result is not so good. Our `target` is `0.3`, while `y` is `0.426`
+
+## Back propagation
+
+Back propagation is a process to adjust weight (w1, w2, and w3) in order to reduce the error.
+
+If we think `x1`, `x2`, and `x3` as a vector. We will need at least two information to adjust `w1`, `w2`, and `w3`:
+* how much should they change: we can set a `learning rate` for this
+* to what direction: we do it by calculating `derivat
 
 # Neural Network implementation using Tensorflow
 
@@ -293,7 +387,7 @@ plt.show()
 
 
 
-![png](neuralnetwork_files/neuralnetwork_23_1.png)
+![png](neuralnetwork_files/neuralnetwork_26_1.png)
 
 
 ## Configuring the neural network model
@@ -375,7 +469,7 @@ plt.show()
 
 
 
-![png](neuralnetwork_files/neuralnetwork_29_1.png)
+![png](neuralnetwork_files/neuralnetwork_32_1.png)
 
 
 # Further discussion
