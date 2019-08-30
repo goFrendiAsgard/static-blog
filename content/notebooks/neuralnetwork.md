@@ -36,8 +36,8 @@ So, let's solve the equation using brute-force experiments!!!
 
 First of all, we have to define our `loss function` (how far we are from the target). In our case, the loss function is as follow:
 
-$$error = |actual\_weight - predicted\_weight|$$
-$$error = |actual\_weight - (w1.age + w2.height + w3)|$$
+$$error = |actualWeight - predictedWeight|$$
+$$error = |actualWeight - (w1.age + w2.height + w3)|$$
 
 Let's implement the loss function in Python:
 
@@ -83,9 +83,9 @@ Let's take the first one: `w1=-100`, `w2=30`, and `w3=-25`
 
 For `age=50`, `height=170`, we get
 
-$$prediction\_weight = -100 . 50 + 30 . 170 - 25 . 1$$
-$$prediction\_weight = -5000 + 5100 - 25$$
-$$prediction\_weight = 75$$
+$$predictionWeight = -100 . 50 + 30 . 170 - 25 . 1$$
+$$predictionWeight = -5000 + 5100 - 25$$
+$$predictionWeight = 75$$
 
 The `prediction_weight` is equal to `actual_weight`!!!
 
@@ -93,9 +93,9 @@ The `prediction_weight` is equal to `actual_weight`!!!
 
 Finally, for `age=40` and `weight=180`, we get this:
 
-$$prediction\_weight = -100.40 + 30.180 - 25.1$$
-$$prediction\_weight = -4000 + 5400 - 25$$
-$$prediction\_weight = 1375$$
+$$predictionWeight = -100.40 + 30.180 - 25.1$$
+$$predictionWeight = -4000 + 5400 - 25$$
+$$predictionWeight = 1375$$
 
 Well, not so make sense, probably we need to use another available predictor.
 
@@ -216,13 +216,28 @@ y
 
 Comparing the `target` and `y`, we can find that the result is not so good. Our `target` is `0.3`, while `y` is `0.426`
 
+To calculate the error we usually use this formula:
+
+$$E(y) = \frac{1}{2}(target-y)^2$$
+
+We need to square `target-y` to avoid negative number. While `1/2` is a math trick to make derivative of `E` easier to calculate.
+
 ## Back propagation
 
 Back propagation is a process to adjust weight (w1, w2, and w3) in order to reduce the error.
 
 If we think `x1`, `x2`, and `x3` as a vector. We will need at least two information to adjust `w1`, `w2`, and `w3`:
-* how much should they change: we can set a `learning rate` for this
-* to what direction: we do it by calculating `derivat
+
+* how much should they change: we can set a `learning rate` for this purpose. Learning rate can be any number. The bigger the learning rate, the faster the learning process. However, it will prone to oscilation.
+* to what direction: we do it by calculating `derivative`
+
+To calculate the new value of `x1`, `x2`, and `x3` we can use these formulas:
+
+$$\Delta w1 = -learningRate * \frac{dE}{df} * \frac{df}{dw1}$$
+$$\Delta w2 = -learningRate * \frac{dE}{df} * \frac{df}{dw2}$$
+$$\Delta w3 = -learningRate * \frac{dE}{df} * \frac{df}{dw3}$$
+
+
 
 # Neural Network implementation using Tensorflow
 
