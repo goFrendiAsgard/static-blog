@@ -300,14 +300,9 @@ Sekarang kita bisa yakin bahwa `bagian penjumlahan` pada sebuah `perceptron` tak
 Kembali lagi ke kasus awal (dengan sedikit modifikasi):
 
 ```
-Kategori:
-  0   : mal-nutrisi
-  0.5 : ideal
-  1   : obesitas
-
-Nama  | Tinggi (i_1) | Porsi makan (i_2) | Kategori (t)
--------------------------------------------------------
-Anton | 165          | 3                 | 0.5 (ideal)
+Nama  | Tinggi (i_1) | Porsi makan (i_2) | Berat (t)
+----------------------------------------------------
+Anton | 165          | 3                 | 65
 ```
 
 Maka kita bisa menghitung nilai `y` dengan cara berikut:
@@ -321,6 +316,8 @@ Nilai `w1`, `w2`, dan `w3` akan kita tentukan secara acak. Misalnya kita ambil `
 ```
 y = 165 * 0.3 + 3 * 0.2 + 0.1
 ```
+
+
 
 ### Bagian Aktivasi
 
@@ -336,28 +333,55 @@ Jika kita yakin data kita pasti linear, maka ada baiknya kita tidak memakai jari
 
 Untuk menghindari `vanishing gradient problem`, umumnya praktisi deep learning lebih menyukai `ReLu` atau `Leaky ReLu`. Kedua fungsi ini juga kerap dipilih karena perhitungannya yang sederhana.
 
-Ok, kembali ke kasus awal. Semisal kita memilih fungsi `logistic`, maka kita harus melakukan ini:
+Ok, kembali ke kasus awal. Semisal kita memilih fungsi `ReLu`, maka kita harus melakukan ini:
 
 ```
 y = 165 * 0.3 + 3 * 0.2 + 0.1
 
 o = f(y)
-o = 1 / [1 + e^-(165 * 0.3 + 3 * 0.2 + 0.1)]
+o = y (karena y tidak kurang dari nol)
 ```
-
-`e` sendiri adalah bilangan euler yang nilainya mendekati `2.718` (https://en.wikipedia.org/wiki/E_(mathematical_constant))
 
 
 ```python
 import math
-1/(1 + math.exp(165 * 0.3 + 3 * 0.2 + 0.1))
+i1 = 165
+i2 = 3
+w1 = 0.3
+w2 = 0.2
+w3 = 0.1
+o = i1 * w1 + i2 * w2 + w3
+print(o)
 ```
 
+    50.2
 
 
+### Perhitungan Error
 
-    1.5791268155225368e-22
+Setelah perhitungan `feed forward` selesai. Langkah selanjutnya adalah menghitung error.
 
+Formula yang umum dipakai untuk menghitung error adalah adalah:
+
+$$E = \frac{1}{2}.(t - o)^2$$
+
+Jika diperhatikan, formula ini agak berbeda dari `error function` yang pernah kita bahas di bagian sebelumnya. Perbedaan tersebut memang disengaja untuk memudahkan perhitungan. Dasar pemikirannya adalah untuk memperbaiki `error`, kita tidak perlu tahu pasti nilai error nya. Kita cukup tahu kira-kira semenyimpang apa kondisi kita saat ini dibandingkan dengan kondisi seharusnya.
+
+Simplifikasi yang dilakukan pada `error function` yang telah dimodifikasi ini antara lain:
+
+* Tidak ada akar kuadrat, karena perhitungan akar kuadrat cukup mahal/susah.
+* Ada penambahan pengali `1/2`. Penambahan ini dimaksudkan supaya perhitungan fungsi turunan pada saat propagasi balik akan menjadi lebih mudah.
+
+Dalam kasus perceptron tunggal ini, kita bisa menghitung nilai error sebagai berikut
+
+
+```python
+t = 65
+error = 0.5 * (t - o)**2
+print(error)
+```
+
+    109.51999999999995
 
 
 ## Back Propagation
@@ -413,27 +437,162 @@ Oleh sebab itu rumus untuk menghitung Delta perlu kita ubah, sehingga nilai `h` 
 
 $$\Delta = Limit _{h -> 0} \frac{f(x_i + h) - f(x_i)}{h}$$
 
-Formula untuk menghitung Delta inilah yang kemudian kita kenal dengan `derivative` atau `fungsi turunan`. Singkatnya, fungsi turunan adalah fungsi untuk menghitung perubahan sesaat.
+Formula untuk menghitung `Delta` inilah yang kemudian kita kenal dengan `derivative` atau `fungsi turunan`. Singkatnya, fungsi turunan adalah fungsi untuk menghitung perubahan sesaat.
 
 Mari kita lihat contoh perhitungan untuk mencari fungsi turunan dari `f(x) = x^2`:
 
-$$f'(x) = Limit _{h -> 0} \frac{f(x + h) - f(x)}{h}$$
-$$f'(x) = Limit _{h -> 0} \frac{(x + h)^2 - (x)^2}{h}$$
-$$f'(x) = Limit _{h -> 0} \frac{(x + h).(x + h) - x^2}{h}$$
-$$f'(x) = Limit _{h -> 0} \frac{x^2 + x_i.h + x.h + h^2 - x^2}{h}$$
-$$f'(x) = Limit _{h -> 0} \frac{x^2 + 2.x_i.h + h^2 - x^2}{h}$$
-$$f'(x) = Limit _{h -> 0} \frac{2.x.h + h^2}{h}$$
-$$f'(x) = Limit _{h -> 0} \frac{h.(2.x+h)}{h}$$
-$$f'(x) = Limit _{h -> 0} 2.x+h$$
-$$f'(x) = 2.x$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{f(x + h) - f(x)}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{(x + h)^2 - (x)^2}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{(x + h).(x + h) - x^2}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{x^2 + x_i.h + x.h + h^2 - x^2}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{x^2 + 2.x_i.h + h^2 - x^2}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{2.x.h + h^2}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} \frac{h.(2.x+h)}{h}$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = Limit _{h -> 0} 2.x+h$$
+$$\frac{\delta f(x)}{\delta x} = f'(x) = 2.x$$
 
 Perhitungan di atas selaras dengan rumus turunan untuk fungsi pemangkatan:
 
-$$f(x) = x^r, f'(x) = r.x^{r-1}$$
+Untuk
+$$f(x) = x^r$$
 
-Dalam prakteknya, Kita perlu mencari fungsi turunan terhadap setiap nilai `w` dari fungsi ini: 
+Maka
+$$\frac{\delta f(x)}{\delta(x)} = f'(x) = r.x^{r-1}$$
 
+Dalam prakteknya, Kita perlu mencari fungsi turunan terhadap setiap nilai `w` dari fungsi ini:
+
+$$E = \frac{1}{2}.(t - o)^2$$
 $$E = \frac{1}{2}.(t-f(\Sigma^n_{k=1}i_k.W_k))^2$$
+
+Cukup sulit tampaknya :(
+
+### Teorema Rantai
+
+Untungnya, dalam matematika dikenal teorema rantai. Secara sederhana, kita sering melihat implementasi teorema rantai dalam perkalian pecahan:
+
+$$\frac{1}{2}.\frac{2}{x}.\frac{x}{y}.\frac{y}{3} = \frac{1}{3}$$
+
+Kita bisa yakin hasil akhir dari perhitungan tersebut adalah `1/3`, sekalipun kita tidak tahu nilai `x` dan `y`.
+
+Teorema rantai bisa juga kita gunakan untuk menghitung `turunan`. Dalam kasus kita, di mana ada `W_1`, `W_2`, dan `W3`, maka:
+
+$$\frac{\delta E}{\delta W_1} = \frac{\delta E}{\delta f} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_1}$$
+$$\frac{\delta E}{\delta W_2} = \frac{\delta E}{\delta f} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_2}$$
+$$\frac{\delta E}{\delta W_2} = \frac{\delta E}{\delta f} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_3}$$
+
+### Perubahan Nilai W
+
+Setelah menghitung arah perubahan W melalui teorema rantai, langkah selanjutnya adalah menghitung perubahan `W`:
+
+$$\Delta W_1 = - learningRate.\frac{\delta E}{\delta W_1}$$
+$$\Delta W_2 = - learningRate.\frac{\delta E}{\delta W_2}$$
+$$\Delta W_3 = - learningRate.\frac{\delta E}{\delta W_3}$$
+
+Setelah menghitung perubahan nilai W, langkah selanjutnya adalah menghitung nilai W yang baru:
+
+$$W'_1 = W_1 + \Delta W_1$$
+$$W'_2 = W_2 + \Delta W_2$$
+$$W'_3 = W_3 + \Delta W_3$$
+
+# Tensorflow
+
+Mari kita coba menggunakan JST untuk kasus berikut:
+
+```
+Nama  | Tinggi (i_1) | Porsi makan (i_2) | Berat (t)
+----------------------------------------------------
+Anton | 165          | 3                 | 65
+Budi  | 170          | 2                 | 70
+Cecep | 163          | 3                 | ?
+```
+
+
+
+
+```python
+# TensorFlow and tf.keras
+import tensorflow as tf
+import numpy as np
+
+inputs = np.asarray([[165, 3], [170, 2]])
+targets = np.asarray([[65 ], [70 ]])
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(units=3, input_shape=(2, ), activation='relu'),
+    tf.keras.layers.Dense(units=1, activation='relu')
+])
+
+#Train the model
+model.compile(optimizer='sgd',
+              loss='mean_squared_error',
+              metrics=['accuracy'])
+model.fit(inputs, targets, epochs=5)
+
+model.predict(np.asarray([[163,3]]))
+```
+
+    Train on 2 samples
+    Epoch 1/5
+    2/2 [==============================] - 0s 231ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
+    Epoch 2/5
+    2/2 [==============================] - 0s 2ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
+    Epoch 3/5
+    2/2 [==============================] - 0s 3ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
+    Epoch 4/5
+    2/2 [==============================] - 0s 2ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
+    Epoch 5/5
+    2/2 [==============================] - 0s 2ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
+
+
+
+
+
+    array([[0.]], dtype=float32)
+
+
+
+Tampaknya untuk kasus ini, dengan data yang sangat sedikit, JST tidak menunjukkan performa yang baik
+
+# JST Untuk Citra
+
+
+```python
+# TensorFlow and tf.keras
+import tensorflow as tf
+from tensorflow import keras
+
+# Helper libraries
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+
+```python
+class_names = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+```
+
+
+```python
+mnist = keras.datasets.mnist
+
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+```
+
+    Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
+    11493376/11490434 [==============================] - 697s 61us/step
+
+
+
+```python
+train_labels
+```
+
+
+
+
+    array([5, 0, 4, ..., 5, 6, 8], dtype=uint8)
+
+
 
 
 ```python
