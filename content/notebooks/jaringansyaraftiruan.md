@@ -696,7 +696,7 @@ plt.show()
 
 
 
-![png](JaringanSyarafTiruan_files/JaringanSyarafTiruan_29_1.png)
+![png](jaringansyaraftiruan_files/jaringansyaraftiruan_29_1.png)
 
 
 
@@ -757,5 +757,5 @@ plt.show()
 
 
 
-![png](JaringanSyarafTiruan_files/JaringanSyarafTiruan_32_1.png)
+![png](jaringansyaraftiruan_files/jaringansyaraftiruan_32_1.png)
 
