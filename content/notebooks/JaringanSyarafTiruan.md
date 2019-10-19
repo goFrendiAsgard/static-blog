@@ -233,4 +233,9 @@ Cara yang sedikit lebih baik, adalah dengan membuat kerangka model yang cukup ge
 
 Menurut saya, inilah definisi jaringan syaraf tiruan: Sebuah model matematis yang cukup general, mudah dikonfigurasi dan diotak-atik. Tapi cukup susah untuk dihitung secara manual. :)
 
-# Fondasi Jaringan Syaraf Tir
+# Fondasi Jaringan Syaraf Tiruan: Perceptron
+
+
+```python
+
+```
