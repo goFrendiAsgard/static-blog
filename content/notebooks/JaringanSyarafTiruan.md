@@ -369,4 +369,9 @@ Untuk memperbaiki nilai `W`, maka kita butuh dua macam informasi:
 
 JST menjawab pertanyaan pertama dengan menyediakan satu parameter yang disebut `learning rate`.
 
-Untuk pertanyaan kedua, jawabannya ternyata 
+Untuk pertanyaan kedua, jawabannya ternyata jauh lebih kompleks, karena kita membutuhkan perhitungan kalkulus. Sebelum kita melangkah lebih jauh, mari kita lihat, bagaimana kalkulus bisa membantu.
+
+
+```python
+
+```
