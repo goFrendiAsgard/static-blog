@@ -11,4 +11,4 @@ Hi, my name is Go Frendi Gunawan. Currently I work as Backend Engineer at kata.a
 
 In this blog, you will find some articles related to software engineering, machine learning, and mathematics.
 
-The articles are intended for `mere mortal`.  Some basic programming/high school math are going to help, but are not required.
+The articles are intended for Indonesian-young-audience.  Some basic programming/high school math are going to help, but are not required.

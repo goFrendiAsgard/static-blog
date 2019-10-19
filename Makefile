@@ -1,8 +1,12 @@
+init-conda-env:
+	conda env create
+save-conda-env:
+	conda env export > generated-environment.yml
 generate:
 	./ipynb-to-markdown.sh && hugo
 serve:
 	./ipynb-to-markdown.sh && hugo server -D
 deploy:
 	./ipynb-to-markdown.sh && hugo && ./deploy.sh
-jupyter:
-	cd content/notebooks && source /opt/anaconda/bin/activate root && jupyter notebook
+start-jupyter:
+	cd content/notebooks && jupyter notebook

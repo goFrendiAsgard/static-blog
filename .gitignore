@@ -2,3 +2,4 @@ public/
 notebooks/*_files/
 notebooks/*.md
 notebooks/.ipynb_checkpoints/
+generated-environment.yml
