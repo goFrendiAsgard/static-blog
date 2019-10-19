@@ -298,9 +298,14 @@ Sekarang kita bisa yakin bahwa `bagian penjumlahan` pada sebuah `perceptron` tak
 Kembali lagi ke kasus awal (dengan sedikit modifikasi):
 
 ```
-Nama  | Tinggi (i_1) | Porsi makan (i_2) | Berat (t)
------------------------------------------------------
-Anton | 165          | 3                 | 65
+Kategori:
+  0   : mal-nutrisi
+  0.5 : ideal
+  1   : obesitas
+
+Nama  | Tinggi (i_1) | Porsi makan (i_2) | Kategori (t)
+-------------------------------------------------------
+Anton | 165          | 3                 | 0.5 (ideal)
 ```
 
 Maka kita bisa menghitung nilai `y` dengan cara berikut:
@@ -355,4 +360,13 @@ import math
 
 ## Back Propagation
 
+Jika diperhatikan, tentu saja hasil perhitungan feed-forward ini meleset jauh. Tapi jangan khawatir. JST punya mekanisme untuk memperbaiki nilai `W` sehingga nantinya nilai output yang dihasilkan akan mendekati target.
 
+Untuk memperbaiki nilai `W`, maka kita butuh dua macam informasi:
+
+* Seberapa besar nilai `W`
+* Bagaimana kita harus mengubah nilai `W`
+
+JST menjawab pertanyaan pertama dengan menyediakan satu parameter yang disebut `learning rate`.
+
+Untuk pertanyaan kedua, jawabannya ternyata 
