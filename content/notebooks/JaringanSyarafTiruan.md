@@ -235,7 +235,11 @@ Menurut saya, inilah definisi jaringan syaraf tiruan: Sebuah model matematis yan
 
 # Fondasi Jaringan Syaraf Tiruan: Perceptron
 
+Ada beberapa hal yang cukup menarik pada JST:
 
-```python
+* JST terdiri dari model-model matematika sederhana yang identik dan bisa dirangkai menjadi model yang lebih kompleks (Mirip seperti sel-sel syaraf yang bisa dihubungkan satu sama lain untuk membentuk jaringan syaraf)
+* Model-model matematika pembentuk JST tersebut (disebut perceptron) memiliki fungsi aktifasi yang bisa diubah-ubah untuk mengatasi masalah-masalah non-linear.
 
-```
+Skema dasar dari sebuah perceptron adalah sebagai berikut:
+
+![](https://upload.wikimedia.org/wikipedia/commons/3/31/Perceptron.svg)
