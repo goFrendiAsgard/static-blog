@@ -98,7 +98,7 @@ y = (1 * 163) - 100
 y = 63
 ```
 
-Jadi tinggi badan Cecep adalah 63 cm.
+Jadi berat badan Cecep adalah 63 kg.
 
 Teknik yang baru kita lakukan tadi disebut teknik `subtitusi`. Teknik ini cukup berguna untuk melakukan berbagai macam konversi linear saat kita lupa "rumus resmi" nya. Rumus konversi Celcius-Fahrenhait-Reamur, atau tingkat-kemurnian-emas (dalam persen) ke karat, dan sebagainya. Saat berhadapan dengan kasus-kasus seperti itu, kita hanya butuh kertas dan pensil. Tidak butuh AI :)
 
@@ -131,6 +131,8 @@ y < 1 * m - 100
 ```
 
 ![](http://gofrendiasgard.github.io/images/algebra-less-than-line.PNG)
+
+Fakta-fakta menarik ini akan membantu kita untuk memahami bahasan selanjutnya.
 
 
 # Regresi VS Klasifikasi
@@ -210,7 +212,7 @@ Pada gambar di atas, kita bisa lihat bahwa dari sekian banyak titik yang ada,jar
 
 Ada berbagai model statistik untuk menghitung peluang, tapi tidak ada yang 100% akurat. Maka dalam dunia yang tidak ideal ini, perlu sekali bagi kita untuk berkompromi dan men-toleransi banyak hal.
 
-Salah satu cara untuk menerapkan `tolearansi` pada matematika adalah dengan membuat `error function` atau `loss function`. Tujuan kita pun bergeser, bukan lagi menebak secara akurat, namun menebak dengan kesalahan seminimal mungkin. Salah satu `error function` yang paling primitif dan cukup sering dipakai adalah:
+Salah satu cara untuk menerapkan `toleransi` pada matematika adalah dengan membuat `error function` atau `loss function`. Tujuan kita pun bergeser, bukan lagi menebak secara akurat, namun menebak dengan kesalahan seminimal mungkin. Salah satu `error function` yang paling primitif dan cukup sering dipakai adalah:
 
 $$E=\sqrt{(Target-Output)^2}$$
 
@@ -370,6 +372,68 @@ Untuk memperbaiki nilai `W`, maka kita butuh dua macam informasi:
 JST menjawab pertanyaan pertama dengan menyediakan satu parameter yang disebut `learning rate`.
 
 Untuk pertanyaan kedua, jawabannya ternyata jauh lebih kompleks, karena kita membutuhkan perhitungan kalkulus. Sebelum kita melangkah lebih jauh, mari kita lihat, bagaimana kalkulus bisa membantu.
+
+### Kalkulus dan Fungsi Turunan
+
+Konsep kalkulus pertama kali diperkenalkan oleh Newton untuk menghitung perubahan sesaat. Sebelum kita membicarakan tentang perubahan sesaat.
+
+Semisal ada fungsi `f(x) = x^2`, maka untuk `x = {0 .. 4}`, kita bisa memperoleh data perubahan nilai `f(x)` sebagai berikut
+
+```
+x_i | y_i = f(x_i)    | Delta = y_(i+1) - y_i
+---------------------------------------------
+0   | 0  = 0^2        | 1
+1   | 1  = 1^2 = 0+1  | 3
+2   | 4  = 2^2 = 1+3  | 5
+3   | 9  = 3^2 = 4+5  | 7
+4   | 16 = 4^2 = 9+7  | 9
+```
+
+Jika kita generalisasi, maka kita akan temukan bahwa
+
+$$\Delta = \frac{f(x_i + h) - f(x_i)}{h}$$
+
+Mari kita buktikan. Dalam kasus kita ini, karena `h = 1`, maka untuk `x = 2`, seharusnya kita akan ketemukan `Delta = 5`
+
+```
+Delta = [f(2+1) - f(2)] / 1
+Delta = [f(3) - f(2)] / 1
+Delta = (3^2 - 2^2) / 1
+Delta = (9 - 4) / 1
+Delta = 5
+```
+
+Terbukti.
+
+Nah konsep perubahan sesaat sebenarnya mirip dengan konsep yang sudah kita jabarkan di atas. Hanya saja kali ini nilai `h` nya mendekati nol. Mengapa mendekati nol? Karena kita tidak mungkin menghitung perubahan nilai `f(x)` jika perubahan `x` nya sendiri adalan nol. Ibarat kita melihat foto sebuah mobil, dan disuruh mengira-ngira kecepatannya. Tidak mungkin bisa. Setidaknya kita butuh 2 foto. Foto mobil saat ini, dan foto beberapa mili-detik setelahnya. Kecepatan bisa ditentukan dengan cara menghitung perubahan posisi mobil dibagi dengan perubahan waktu pengambilan foto.
+
+![](https://1.bp.blogspot.com/-z0MS_ogXHSo/UZPXglI1TyI/AAAAAAAAKxQ/GJJkeY7Ho-I/s1600/Audi+Car+(7).jpg)
+
+Oleh sebab itu rumus untuk menghitung Delta perlu kita ubah, sehingga nilai `h` nya kecil sekali (mendekati nol). Kebetulan dalam matematika ada konsep `limit` (mendekati namun tak sampai :( ). Oleh karena itu, rumus menghitung delta bisa kita tulis sebagai berikut:
+
+$$\Delta = Limit _{h -> 0} \frac{f(x_i + h) - f(x_i)}{h}$$
+
+Formula untuk menghitung Delta inilah yang kemudian kita kenal dengan `derivative` atau `fungsi turunan`. Singkatnya, fungsi turunan adalah fungsi untuk menghitung perubahan sesaat.
+
+Mari kita lihat contoh perhitungan untuk mencari fungsi turunan dari `f(x) = x^2`:
+
+$$f'(x) = Limit _{h -> 0} \frac{f(x + h) - f(x)}{h}$$
+$$f'(x) = Limit _{h -> 0} \frac{(x + h)^2 - (x)^2}{h}$$
+$$f'(x) = Limit _{h -> 0} \frac{(x + h).(x + h) - x^2}{h}$$
+$$f'(x) = Limit _{h -> 0} \frac{x^2 + x_i.h + x.h + h^2 - x^2}{h}$$
+$$f'(x) = Limit _{h -> 0} \frac{x^2 + 2.x_i.h + h^2 - x^2}{h}$$
+$$f'(x) = Limit _{h -> 0} \frac{2.x.h + h^2}{h}$$
+$$f'(x) = Limit _{h -> 0} \frac{h.(2.x+h)}{h}$$
+$$f'(x) = Limit _{h -> 0} 2.x+h$$
+$$f'(x) = 2.x$$
+
+Perhitungan di atas selaras dengan rumus turunan untuk fungsi pemangkatan:
+
+$$f(x) = x^r, f'(x) = r.x^{r-1}$$
+
+Dalam prakteknya, Kita perlu mencari fungsi turunan terhadap setiap nilai `w` dari fungsi ini: 
+
+$$E = \frac{1}{2}.(t-f(\Sigma^n_{k=1}i_k.W_k))^2$$
 
 
 ```python
