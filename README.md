@@ -12,7 +12,7 @@ This is the source code of my static blog. The blog has several prerequisites:
 You only need to do this once
 
 ```
-git clone --recursive git://github.com/goFrendiAsgard/static-blog.git
+git clone --recursive git@github.com:goFrendiAsgard/static-blog.git
 ```
 
 ## Init Virtual Environment and Add Conda Forge Channel
