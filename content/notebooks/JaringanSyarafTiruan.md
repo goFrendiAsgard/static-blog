@@ -6,9 +6,10 @@ categories:
 tags:
 - Macine Learning
 ---
-# Jaringan Syaraf Tiruan
+# Mitos
 
 Ada banyak mitos yang beredar tentang Jaringan Syaraf Tiruan (JST). Misalnya:
+
 * JST mampu membuat sistem yang secerdas manusia.
 * JST memberikan akurasi yang lebih tinggi daripada pemrograman konvensional.
 * JST dan Kecerdasan Buatan (AI) akan mengambil alih dunia.
@@ -103,7 +104,7 @@ Sedikit fakta menarik, ternyata perhitungan kita barusan, sesuai dengan artikel 
 
 # Lebih Jauh dengan Permasalahan Berat Badan Ideal
 
-Berat badan ideal adalah masalah kita semua. Sedikit saja kita kurang bergerak dan terlalu banyak makan, maka kita akan jadi terlalu gemuk. Sebaliknya, jika kita makan terlalu sedikit, maka kita akan jadi terlalu kurus. Dalam hal ini memiliki berat badan ideal itu bisa dianalogikan seperti berjalan di atas seutas tali tipis, sedikit terlalu ke kiri, atau sedikit terlalu ke kanan, maka kita akan jatuh ke dalam lembah `obesitas` atau `mal-nutrisi`.
+Berat badan ideal adalah masalah kita semua. Sedikit saja kita kurang bergerak dan terlalu banyak makan, maka kita akan jadi terlalu gemuk. Sebaliknya, jika kita makan terlalu sedikit, maka kita akan jadi terlalu kurus. Dalam hal ini memiliki berat badan ideal itu bisa dianalogikan seperti berjalan di atas seutas tali tipis, sedikit terlalu ke kiri, atau sedikit terlalu ke kanan, maka kita akan jatuh ke dalam lembah `obesitas` (berat badan lebih dari seharusnya) atau `mal-nutrisi` (berat badan kurang dari seharusnya).
 
 Nah, menariknya, analogi yang saya tulis barusan tadi ternyata persis sama dengan permodelan matematika yang ada:
 
@@ -111,9 +112,125 @@ Nah, menariknya, analogi yang saya tulis barusan tadi ternyata persis sama denga
 y = 1 * m - 100
 ```
 
+![](http://gofrendiasgard.github.io/images/algebra-line.PNG)
 
-
-
-```python
+Dengan cara yang sama kita dapat memodelkan `obesitas` dengan pertidaksamaan:
 
 ```
+y > 1 * m - 100
+```
+
+![](http://gofrendiasgard.github.io/images/algebra-greater-than-line.PNG)
+
+Atau `mal-nutrisi` dengan pertidaksamaan:
+
+```
+y < 1 * m - 100
+```
+
+![](http://gofrendiasgard.github.io/images/algebra-less-than-line.PNG)
+
+
+# Regresi VS Klasifikasi
+
+Kembali ke kasus Anton, Budi, dan Cecep. Ketiga orang tersebut memiliki data sebagai berikut:
+
+```
+Nama  | Tinggi (x) | Berat (y)
+------------------------------
+Anton | 165        | 65
+Budi  | 170        | 70
+Cecep | 163        | 63
+```
+
+Kita cukup beruntung karena jika digambarkan, posisi mereka ada dalam satu garis lurus `y = 1 * x + c`. Di sini kita lihat, bahwa nilai target yang kita cari (dalam hal ini berat), bisa sangat bervariasi. Secara matematis, bahkan kita bisa katakan bahwa kemungkinan nilai berat ini tak terbatas. Bisa jadi ada orang yang beratnya 65,1 kg, atau 65,100013 kg, dan seterusnya.
+
+Nah untuk kasus di mana nilai target yang kita cari memiliki kemungkinan yang sangat banyak, kita sebut permasalahannya sebagai `regresi`. Seperti yang sudah kita duga, `regresi` bisa diselesaikan dengna cara mencari garis/bidang model (dalam kasus kita, model nya adalah garis `y = 1 * x - 100`. Selanjutnya data baru akan kita cocokkan dengan model tersebut sehingga nilai target bisa ditemukan.
+
+Sekarang bayangkan, bagaimana jika kita punya kasus yang berbeda
+
+```
+Nama   | Tinggi (x) | Berat (y) | Kategori (z)
+-----------------------------------------------
+Anton  | 165        | 65        | Ideal
+Budi   | 170        | 70        | Ideal
+Cecep  | 163        | 63        | Ideal
+Didit  | 163        | 40        | Mal-nutrisi
+Emil   | 170        | 50        | Mal-nutrisi
+Frank  | 150        | 40        | Mal-nutrisi
+Ganot  | 170        | 100       | Obesitas
+Herman | 165        | 80        | Obesitas
+Ical   | 180        | 120       | Obesitas
+```
+
+Kali ini target kita adalah kategori. Berbeda dengan kasus `regresi` di contoh sebelumnya, sekarang kita hanya punya tiga kemungkinan target, yakni `ideal`, `mal-nutrisi`, dan `obesitas`. Permasalahan ini disebut permasalahan `klasifikasi`.
+
+Jika pada `regresi` kita mencocokkan data terhadap model, maka pada `klasifikasi`, kita menggunakan model untuk memisahkan data (Mirip seperti kasus `pertidaksamaan linear` pada contoh sebelumnya).
+
+Walaupun sepintas permasalahan regresi dan klasifikasi tampak berbeda, namun langkah awalnya sama: Menentukan model.
+
+Dengan sedikit abstraksi, kita bisa mengubah permasalahan klasifikasi ke ranah regresi. Kita ambil kembali contoh di atas. Kali ini dengan atribut `rasio`:
+
+```
+Nama   | Tinggi (x) | Berat (y) | Rasio (w=y/(x-100)) | Kategori (z)
+--------------------------------------------------------------------
+Anton  | 165        | 65        | 1                   | Ideal
+Budi   | 170        | 70        | 1                   | Ideal
+Cecep  | 163        | 63        | 1                   | Ideal
+Didit  | 163        | 40        | 0.63                | Mal-nutrisi
+Emil   | 170        | 50        | 0.71                | Mal-nutrisi
+Frank  | 150        | 40        | 0.80                | Mal-nutrisi
+Ganot  | 170        | 100       | 1.42                | Obesitas
+Herman | 165        | 80        | 1.23                | Obesitas
+Ical   | 180        | 120       | 1.5                 | Obesitas
+```
+
+Pertama-tama kita melakukan `regresi` untuk mencari nilai rasio, kemudian kita melakukan klasifikasi berdasarkan rasio tersebut. Misalnya, jika rasio kurang dari satu berarti mal-nutrisi, jika lebih dari satu, berarti obesitas, dan jika sama dengan satu berarti ideal.
+
+Abstraksi tersebut bukanlah satu-satunya cara yang mungkin. Masih ada banyak cara lain yang tidak kita bahas di sini.
+
+
+# Kita dan Alam Semesta yang Tidak Ideal
+
+Regresi adalah satu teknik yang sangat berguna. Dalam dunia yang ideal, kita bisa saja memprediksi harga saham dan tanah ataupun menebak perasaan 'si dia' dengan menggunakan permodelan yang tepat.
+
+Sayangnya, __alam semesta tidak ideal__, dan __kita tidak maha tahu__. Ketidak-idealan alam semesta mungkin bisa digambarkan seperti berikut:
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Linear_regression.svg/1200px-Linear_regression.svg.png)
+
+Pada gambar di atas, kita bisa lihat bahwa dari sekian banyak titik yang ada,jarang sekali yang benar-benar berada dalam garis model. Banyak hal di dunia ini yang tidak bisa 100% ditebak. Lemparan dua mata dadu misalnya, tidak mungkin memunculkan angka 13 atau 0. Kemungkinan kecil memunculkan angka 1 atau 12, dan besar kemungkinan memunculkan angka 5,6, dan 7. Hanya sejauh itulah yang kita tahu.
+
+Ada berbagai model statistik untuk menghitung peluang, tapi tidak ada yang 100% akurat. Maka dalam dunia yang tidak ideal ini, perlu sekali bagi kita untuk berkompromi dan men-toleransi banyak hal.
+
+Salah satu cara untuk menerapkan `tolearansi` pada matematika adalah dengan membuat `error function` atau `loss function`. Tujuan kita pun bergeser, bukan lagi menebak secara akurat, namun menebak dengan kesalahan seminimal mungkin. Salah satu `error function` yang paling primitif dan cukup sering dipakai adalah:
+
+$$E=\sqrt{(Target-Output)^2}$$
+
+Kalian mungkin bertanya-tanya, kenapa tidak sekedar `Target-Output` saja? Nah, `Target-Output` mungkin saja memberikan hasil negatif. Ini akan menimbulkan masalah saat kita mencoba menjumlahkan nilai `error` total.
+
+```
+Target | Output | Target - Output | sqrt((Target-Output)^2) 
+-----------------------------------------------------------
+ 8     | -8     |  16             | 16
+-8     |  8     | -16             | 16
+-----------------------------------------------------------
+Total           |   0 (Loh???)    | 32 (Seharusnya begini)
+```
+
+Adanya `akar` dan `kuadrat` pada rumus `error function` dimaksudkan untuk menghindari masalah ini.
+
+Dengan menentukan `error function` yang tepat, maka kita mampu __mengukur kesalahan__ dan __membuat model yang lebih toleran__.
+
+Tapi kita masih punya masalah kedua. Kita tidak maha tahu, dan tidak semua masalah bisa diselesaikan dengan persamaan linear.
+
+Lalu apa yang harus kita lakukan?
+
+Jawaban yang naif adalah "mencoba satu-satu". Dalam beberapa kasus, kita bisa saja cukup beruntung dan menemukan model yang tepat.
+
+Dalam keadaan normal, biasanya pola sebaran statistika akan mengikuti fungsi Gauss (https://en.wikipedia.org/wiki/Gaussian_function). Tapi tentu saja, ini pertaruhan yang belum tentu berhasil.
+
+Cara yang sedikit lebih baik, adalah dengan membuat kerangka model yang cukup general. Bisa diumpamakan seperti kita memakai swiss-army knife yang jika dilipat-lipat dengan konfigurasi yang benar, bisa memunculkan suatu alat yang berguna untuk menyelesaikan permasalahan kita.
+
+Menurut saya, inilah definisi jaringan syaraf tiruan: Sebuah model matematis yang cukup general, mudah dikonfigurasi dan diotak-atik. Tapi cukup susah untuk dihitung secara manual. :)
+
+# Fondasi Jaringan Syaraf Tir
