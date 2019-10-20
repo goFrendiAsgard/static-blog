@@ -503,55 +503,157 @@ Nama  | Tinggi (i_1) | Porsi makan (i_2) | Berat (t)
 ----------------------------------------------------
 Anton | 165          | 3                 | 65
 Budi  | 170          | 2                 | 70
+Andi  | 150          | 2                 | 50
+Bowo  | 175          | 3                 | 75
+Asep  | 165          | 3                 | 65
 Cecep | 163          | 3                 | ?
 ```
+
+Dalam kasus ini, kita akan mencoba menggunakan 3 layer:
+
+* Layer pertama adalah input layer. Layer ini terdiri dari 2 perceptron untuk menerima dua masukan (tinggi dan porsi).
+* Layer kedua adalah hidden layer dengan 3 perceptron
+* Layer terakhir adalah output layer yang memnculkan prediksi berat badan.
 
 
 
 
 ```python
-# TensorFlow and tf.keras
 import tensorflow as tf
 import numpy as np
 
-inputs = np.asarray([[165, 3], [170, 2]])
-targets = np.asarray([[65 ], [70 ]])
+inputs  = np.array([ [165, 3], [170, 2], [150, 2], [175, 3], [165, 3] ])
+targets = np.array([ [65],     [70],     [50],     [75],     [65] ])
 
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(units=3, input_shape=(2, ), activation='relu'),
-    tf.keras.layers.Dense(units=1, activation='relu')
+    tf.keras.layers.Dense(units = 3, input_shape = (2, ), activation = tf.keras.activations.relu), # input: 2, output: 3
+    tf.keras.layers.Dense(units = 1, activation = tf.keras.activations.relu), # input: 3, output: 1
 ])
+model.compile(optimizer = 'sgd',
+              loss = tf.keras.losses.mean_absolute_error,
+              metrics = ['accuracy'])
 
 #Train the model
-model.compile(optimizer='sgd',
-              loss='mean_squared_error',
-              metrics=['accuracy'])
-model.fit(inputs, targets, epochs=5)
+model.fit(inputs, targets, epochs=10)
 
-model.predict(np.asarray([[163,3]]))
+print("Training Target:", targets, "\nTraining Output:", model.predict(inputs))
+print("Test Target:", 63, "\nTest Output:", model.predict(np.array([[163,3]])))
 ```
 
-    Train on 2 samples
-    Epoch 1/5
-    2/2 [==============================] - 0s 231ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
-    Epoch 2/5
-    2/2 [==============================] - 0s 2ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
-    Epoch 3/5
-    2/2 [==============================] - 0s 3ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
-    Epoch 4/5
-    2/2 [==============================] - 0s 2ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
-    Epoch 5/5
-    2/2 [==============================] - 0s 2ms/sample - loss: 4562.5000 - accuracy: 0.0000e+00
+    Train on 5 samples
+    Epoch 1/10
+    5/5 [==============================] - 0s 62ms/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 2/10
+    5/5 [==============================] - 0s 724us/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 3/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 4/10
+    5/5 [==============================] - 0s 779us/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 5/10
+    5/5 [==============================] - 0s 939us/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 6/10
+    5/5 [==============================] - 0s 989us/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 7/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 8/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 9/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Epoch 10/10
+    5/5 [==============================] - 0s 875us/sample - loss: 65.0000 - accuracy: 0.0000e+00
+    Training Target: [[65]
+     [70]
+     [50]
+     [75]
+     [65]] 
+    Training Output: [[0.]
+     [0.]
+     [0.]
+     [0.]
+     [0.]]
+    Test Target: 63 
+    Test Output: [[0.]]
 
 
+:(
+
+Ternyata hasilnya sangat buruk. Jauh dari dugaan kita. Di sini kita bisa lihat dengan jelas bahwa JST __bukan__ solusi untuk semua masalah.
+
+Sekalipun secara teoritis JST punya peluang untuk menyelesaikan banyak masalah, namun pada kenyataannya para peneliti di bidang kecerdasan buatan seringkali harus melakukan riset berbulan-bulan atau bahkan bertahun-tahun hanya untuk menemukan arsitektur dan parameter yang tepat.
+
+Kebetulan, kasus kita tidak terlalu rumit. Sebisa mungkin jika kalian berhadapan dengan kasus seperti ini (solusinya bisa diduga, gunakanlah aljabar, pemrograman-konvensional atau linear/logistic regression). Karena saya masih belum menyerah dengan JST, maka saya melakukan sedikit fine-tuning pada JST kita tadi:
+
+* Tampaknya dalam kasus ini 1 perceptron saja sudah cukup (`y = m1.x1 + m2.x2 + c`)
+* Tampaknya pula, kita tidak perlu fungsi aktivasi, karena masalah kita sepenuhnya linear.
+* Tampaknya pula, nilai c nya pasti `-100`.
+
+Mari kita coba sekali lagi:
 
 
+```python
+# Import tensorflow and numpy
+import tensorflow as tf
+import numpy as np
 
-    array([[0.]], dtype=float32)
+inputs  = np.array([ [165, 3], [170, 2], [150, 2], [175, 3], [165, 3] ])
+targets = np.array([ [65],     [70],     [50],     [75],     [65] ])
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(units = 1,
+                          input_shape = (2, ), 
+                          activation = tf.keras.activations.linear, 
+                          use_bias = True,
+                          bias_initializer = tf.keras.initializers.Constant(-100),
+                          kernel_initializer = tf.keras.initializers.Constant(1))
+])
+model.compile(optimizer = 'sgd',
+              loss = tf.keras.losses.mean_absolute_error,
+              metrics = ['accuracy'])
+
+#Train the model
+model.fit(inputs, targets, epochs=10)
+
+print("Training Target:", targets, "\nTraining Output:", model.predict(inputs))
+print("Test Target:", 63, "\nTest Output:", model.predict(np.array([[163,3]])))
+
+```
+
+    Train on 5 samples
+    Epoch 1/10
+    5/5 [==============================] - 0s 90ms/sample - loss: 2.6000 - accuracy: 0.0000e+00
+    Epoch 2/10
+    5/5 [==============================] - 0s 931us/sample - loss: 269.7276 - accuracy: 0.0000e+00
+    Epoch 3/10
+    5/5 [==============================] - 0s 784us/sample - loss: 2.6000 - accuracy: 0.0000e+00
+    Epoch 4/10
+    5/5 [==============================] - 0s 886us/sample - loss: 269.7276 - accuracy: 0.0000e+00
+    Epoch 5/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 2.6000 - accuracy: 0.0000e+00
+    Epoch 6/10
+    5/5 [==============================] - 0s 943us/sample - loss: 269.7276 - accuracy: 0.0000e+00
+    Epoch 7/10
+    5/5 [==============================] - 0s 877us/sample - loss: 2.6000 - accuracy: 0.0000e+00
+    Epoch 8/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 269.7276 - accuracy: 0.0000e+00
+    Epoch 9/10
+    5/5 [==============================] - 0s 1ms/sample - loss: 2.6000 - accuracy: 0.0000e+00
+    Epoch 10/10
+    5/5 [==============================] - 0s 893us/sample - loss: 269.7276 - accuracy: 0.0000e+00
+    Training Target: [[65]
+     [70]
+     [50]
+     [75]
+     [65]] 
+    Training Output: [[68.]
+     [72.]
+     [52.]
+     [78.]
+     [68.]]
+    Test Target: 63 
+    Test Output: [[66.]]
 
 
-
-Tampaknya untuk kasus ini, dengan data yang sangat sedikit, JST tidak menunjukkan performa yang baik
+Wah, rupanya masih meleset sekitar 2 atau 3 kg. Tapi inilah kira-kira hasil akhir sebuah JST.
 
 # JST Untuk Citra
 
@@ -696,7 +798,7 @@ plt.show()
 
 
 
-![png](jaringansyaraftiruan_files/jaringansyaraftiruan_29_1.png)
+![png](jaringansyaraftiruan_files/jaringansyaraftiruan_31_1.png)
 
 
 
@@ -757,5 +859,5 @@ plt.show()
 
 
 
-![png](jaringansyaraftiruan_files/jaringansyaraftiruan_32_1.png)
+![png](jaringansyaraftiruan_files/jaringansyaraftiruan_34_1.png)
 
