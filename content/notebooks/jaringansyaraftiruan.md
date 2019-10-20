@@ -390,7 +390,7 @@ Jika diperhatikan, tentu saja hasil perhitungan feed-forward ini meleset jauh. T
 
 Untuk memperbaiki nilai `W`, maka kita butuh dua macam informasi:
 
-* Seberapa besar nilai `W`
+* Seberapa besar perubahan nilai `W`
 * Bagaimana kita harus mengubah nilai `W`
 
 JST menjawab pertanyaan pertama dengan menyediakan satu parameter yang disebut `learning rate`.
@@ -476,9 +476,9 @@ Kita bisa yakin hasil akhir dari perhitungan tersebut adalah `1/3`, sekalipun ki
 
 Teorema rantai bisa juga kita gunakan untuk menghitung `turunan`. Dalam kasus kita, di mana ada `W_1`, `W_2`, dan `W3`, maka:
 
-$$\frac{\delta E}{\delta W_1} = \frac{\delta E}{\delta f} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_1}$$
-$$\frac{\delta E}{\delta W_2} = \frac{\delta E}{\delta f} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_2}$$
-$$\frac{\delta E}{\delta W_2} = \frac{\delta E}{\delta f} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_3}$$
+$$\frac{\delta E}{\delta W_1} = \frac{\delta E}{\delta o} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_1}$$
+$$\frac{\delta E}{\delta W_2} = \frac{\delta E}{\delta o} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_2}$$
+$$\frac{\delta E}{\delta W_2} = \frac{\delta E}{\delta o} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_3}$$
 
 ### Perubahan Nilai W
 
@@ -494,9 +494,67 @@ $$W'_1 = W_1 + \Delta W_1$$
 $$W'_2 = W_2 + \Delta W_2$$
 $$W'_3 = W_3 + \Delta W_3$$
 
+Untuk melihat versi perhitungan yang sangat detail, teman-teman bisa kunjungi https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+
+Nah, karena perhitungannya cukup panjang, mari kita coba salah satu saja, menghitung nilai `W_1` yang baru.
+
+$$W'_1 = W_1 + \Delta W_1$$
+
+$$W'_1 = W_1 - learningRate.\frac{\delta E}{\delta W_1}$$
+
+$$W'_1 = W_1 - learningRate.\frac{\delta E}{\delta o} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_1}$$
+
+Untuk kasus kita ini, nilai, `W_1 = 0.3`. Anggap saja, kita sudah menentukan `learningRate = 0.001`. Maka sekarang tersisa beberapa hal lagi yang perlu kita hitung. Masing-masing adalah `dE/do`, `do/dy`, dan `dy/dW_1`.
+
+#### dE/do
+
+$$\frac{\delta E}{\delta o} = \frac{\delta \frac{1}{2}.(t-o)^2}{\delta o} $$
+$$\frac{\delta E}{\delta o} = (t-o) $$
+
+Karena `t = 65` dan `o = 50.2` (didapat dari fase `feed forward`), maka: 
+
+$$\frac{\delta E}{\delta o} = (65 - 50.2) $$
+
+
+#### do/dy
+
+Karena nilai `y = 50.2`, dan kita menggunakan fungsi aktivasi Relu, maka:
+
+$$\frac{\delta o}{\delta y} = 1 $$
+
+
+#### dy/dW_1
+
+$$\frac{\delta y}{\delta W_1} = \frac{\delta i_1.W_1 + i_2.W_2 + W_3}{\delta W_1} $$
+$$\frac{\delta y}{\delta W_1} = i_1 $$
+
+Karena `i_1 = 165`, maka:
+
+$$\frac{\delta y}{\delta W_1} = 165 $$
+
+#### W_1 yang Baru
+
+Setelah mendapatkan semua angka yang kita butuhkan, kita bisa menghitung nilai W_1 yang baru sebagai berikut:
+
+$$W'_1 = W_1 - learningRate.\frac{\delta E}{\delta o} . \frac{\delta o}{\delta y} . \frac{\delta y}{\delta W_1}$$
+
+
+```python
+w1 = 0.3
+w1 = w1 - 0.001 * (65 - 50.2) * 1 * 165
+print(w1)
+```
+
+    -2.142
+
+
 # Tensorflow
 
-Mari kita coba menggunakan JST untuk kasus berikut:
+Dewasa ini, kita tidak perlu membuat program dari nol hanya untuk sekedar membuat JST sederhana. Ada berbagai framework yang sudah dibuat sedemikian rupa, sehingga kita bisa membuat JST dengan baris kode sesedikit mungkin. Saat ini, banyak yang menggunakan Tensorflow2 atau Pytorch untuk membuat JST dengan arsitektur yang luar biasa rumit.
+
+Tensorflow2 sendiri adalah proyek besutan Google yang di dalamnya juga menyertakan `keras`. Keras adalah sebuah pustaka yang menyediakan banyak layar abstraksi.
+
+Mari kita coba membuat JST menggunakan tensorflow untuk kasus berikut:
 
 ```
 Nama  | Tinggi (i_1) | Porsi makan (i_2) | Berat (t)
@@ -581,7 +639,9 @@ Ternyata hasilnya sangat buruk. Jauh dari dugaan kita. Di sini kita bisa lihat d
 
 Sekalipun secara teoritis JST punya peluang untuk menyelesaikan banyak masalah, namun pada kenyataannya para peneliti di bidang kecerdasan buatan seringkali harus melakukan riset berbulan-bulan atau bahkan bertahun-tahun hanya untuk menemukan arsitektur dan parameter yang tepat.
 
-Kebetulan, kasus kita tidak terlalu rumit. Sebisa mungkin jika kalian berhadapan dengan kasus seperti ini (solusinya bisa diduga, gunakanlah aljabar, pemrograman-konvensional atau linear/logistic regression). Karena saya masih belum menyerah dengan JST, maka saya melakukan sedikit fine-tuning pada JST kita tadi:
+Kebetulan, kasus kita tidak terlalu rumit. Sebisa mungkin jika teman-teman berhadapan dengan kasus seperti ini (solusinya bisa diduga), gunakanlah aljabar, pemrograman-konvensional atau linear/logistic regression.
+
+Karena saya masih belum menyerah dengan JST, maka saya melakukan sedikit fine-tuning pada JST kita tadi:
 
 * Tampaknya dalam kasus ini 1 perceptron saja sudah cukup (`y = m1.x1 + m2.x2 + c`)
 * Tampaknya pula, kita tidak perlu fungsi aktivasi, karena masalah kita sepenuhnya linear.
@@ -657,6 +717,10 @@ Wah, rupanya masih meleset sekitar 2 atau 3 kg. Tapi inilah kira-kira hasil akhi
 
 # JST Untuk Citra
 
+Usai tahu bagaimana JST bekerja, mari kita sedikit bermain-main dengan citra yang ada pada MNIST dataset.
+
+MNIST dataset adalah dataset yang umum dipakai untuk melakukan Optical-character-recognition. Dalam dataset ini terdapat  gambar-gambar tulisan angka dengan resolusi 28x28 pixel.
+
 
 ```python
 # TensorFlow and tf.keras
@@ -668,10 +732,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 ```
 
+Untuk sedikit mempercantik, kita bisa menciptakan sebuah list label. JST sendiri sejatinya hanya bisa berurusan dengan angka. Sehingga harus ada mekanisme khusus untuk mengubah kata menjadi angka atau sebaliknya.
+
 
 ```python
 class_names = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 ```
+
+Setelah semuanya siap, kita bisa mengunduh mnist dataset dengan perintah berikut
 
 
 ```python
@@ -683,6 +751,8 @@ mnist = keras.datasets.mnist
     Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
     11493376/11490434 [==============================] - 697s 61us/step
 
+
+Di sini kita punya 6000 train_labels yang masing-masing berkorelasi dengan angka yang tergambar pada train_images
 
 
 ```python
@@ -780,6 +850,8 @@ train_images.shape
 
 
 
+Mari kita intip salah satu train_image:
+
 
 ```python
 index = 0
@@ -798,8 +870,16 @@ plt.show()
 
 
 
-![png](jaringansyaraftiruan_files/jaringansyaraftiruan_31_1.png)
+![png](jaringansyaraftiruan_files/jaringansyaraftiruan_36_1.png)
 
+
+Dan seperti sebelumnya, sekarang kita bisa mulai membuat model JST.
+
+Pertama-tama, citra dengan dimensi 28x28 ini kita pipihkan menjadi 1x784. Vektor 1x784 ini kita lewatkan pada sebuah hidden layer dengan 1024 perceptron.
+
+Akhirnya, kita masukkan kembali dalam sebuah output layer dengan 10 unit. Dalam hal ini, kita ini perceptron pertama mewakili angka nol, perceptron kedua mewakili angka 1, dan perceptron kesepuluh mewakili angka 9.
+
+Ini pendekatan yang cukup menarik, karena bisa saja ada dua angka yang penulisannya mirip. 1 dan 7 misalnya. Di sini kita bisa lihat, bahwa selain bisa digunakan untuk regresi/klasifikasi, secara lebih lanjut, JST bisa digunakan untuk mendeteksi fitur-fitur menarik ataupun anomali pada data.
 
 
 ```python
@@ -836,6 +916,8 @@ print('Test accuracy:', test_acc)
     Test accuracy: 0.9412
 
 
+Akhirnya, kita coba untuk melakukan prediksi.
+
 
 ```python
 predictions = model.predict(test_images)
@@ -859,5 +941,11 @@ plt.show()
 
 
 
-![png](jaringansyaraftiruan_files/jaringansyaraftiruan_34_1.png)
+![png](jaringansyaraftiruan_files/jaringansyaraftiruan_41_1.png)
 
+
+Hasilnya tepat sekali (karena kebetulan dataset nya memang bagus, dan arsitektur JST nya juga sesuai).
+
+Pada artikel selanjutnya, saya akan mencoba untuk membahas tentang NLP, CNN, RNN, LSTM, Transformers, dan BERT.
+
+Harapannya, melalui artikel yang cukup panjang ini, teman-teman bisa memahami bagaimana sebenarnya JST bekerja. Apa yang layak/tidak layak diselesaikan dengan JST.
