@@ -73,7 +73,7 @@ Karena `c = 65 - (m * 165)`, maka kita bisa tulis ulang persamaan berat badan Bu
 ```
 70 = (m * 170) + 65 - (m * 165)
 70 - 65 = (m * 170) - (m * 165)
-5 = m * (170 * 165)
+5 = m * (170 - 165)
 5 = m * 5
 m = 5/5
 m = 1
